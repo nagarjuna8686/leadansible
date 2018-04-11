@@ -9,9 +9,9 @@ pipeline {
         }
         stage('Build') {
             steps {
-                withAnt(ant : 'ant') {
-                 sh 'ant compile'
-            }
+           def jdkHome = /usr/lib/jvm/java-8-oracle name: 'java'
+           def antHome = /opt/ant/ name: 'ant'     
+           sh 'ant -f build.xml'
         }
     }
         stage('Deploy') {
