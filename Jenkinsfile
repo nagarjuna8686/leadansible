@@ -9,11 +9,14 @@ pipeline {
         }
         stage('Build') {
             steps {
-           def jdk = /usr/lib/jvm/java-8-oracle name: 'java'
-           def antHome = /opt/ant/ name: 'ant'     
-           sh 'ant -f build.xml'
+           ant{
+               
+             targets('war')
+             buildFile('build.xml')
+             ant('1.9.11')
         }
     }
+ }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
