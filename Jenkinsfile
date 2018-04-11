@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-           def jdkHome = /usr/lib/jvm/java-8-oracle name: 'java'
+           def jdk = /usr/lib/jvm/java-8-oracle name: 'java'
            def antHome = /opt/ant/ name: 'ant'     
            sh 'ant -f build.xml'
         }
