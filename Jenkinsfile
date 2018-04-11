@@ -9,9 +9,9 @@ pipeline {
         }
         stage('Build') {
             steps {
-           ant{
+           ant {
                
-             targets('war')
+             targets('compile')
              buildFile('build.xml')
              ant('1.9.11')
         }
