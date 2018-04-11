@@ -2,16 +2,18 @@ pipeline {
     agent any
 
     stages {
+        stage('scm checkout') {
+            steps {
+                git url: 'https://github.com/nagarjuna8686/leadansible.git'
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building..'
+                withAnt(ant : 'ant') {
+                 sh 'ant compile'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
+    }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
