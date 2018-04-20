@@ -1,0 +1,123 @@
+-------------------------------------------Automation Jenkins on ansible-----------------------------------------------------------
+
+
+**********************************JAVA 8 Install***************************************
+
+
+---
+- name: Add Java repository
+  raw: add-apt-repository -y ppa:webupd8team/java
+# Automatically accepts the Oracle License popup in the terminal
+- name: Automatically select the Oracle License
+  raw: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+# Install Java 8
+- name: Install the Java 8 package
+  apt:
+   name: oracle-java8-installer
+   state: present
+   update_cache: yes
+   
+   
+*****************************Tomcat 7 Install*******************************************************
+
+---
+# tasks file for tomcat
+- name: Make sure that we can connect to the machine
+  ping:
+
+- name: download tomcat
+  get_url: url=http://www-eu.apache.org/dist/tomcat/tomcat-7/v7.0.85/bin/apache-tomcat-7.0.85.tar.gz dest=/opt/
+
+- name: Extract Tomcat archive
+  command: tar zxvf /opt//apache-tomcat-7.0.85.tar.gz -C /opt/ creates=/opt/apache-tomcat-7.0.85
+
+- name: Start Tomcat
+  command: nohup /opt/apache-tomcat-7.0.85/bin/startup.sh
+  become: true
+
+- name: stop tomcat
+  raw: nohup /opt/apache-tomcat-7.0.85/bin/shutdown.sh
+
+- name: start tomcat
+  raw: nohup /opt/apache-tomcat-7.0.85/bin/startup.sh
+  
+  
+******************************************************leadapp copy jenkins(ansible) to node***************************************************************
+
+---
+# tasks file for lead
+- name: copy the lead app jenkins to tomcat
+  copy:
+    src: /var/lib/jenkins/workspace/ant project/dist/lib/leadapp.war
+    dest: /opt/apache-tomcat-7.0.85/webapps
+
+    
+***************************************************schema copy jenkins (ansible) to Node**********************************************************************
+
+---
+# tasks file for schema
+- name: copy the schema jenkins to tomcat
+  copy:
+    src: /var/lib/jenkins/workspace/ant project/src/database/schema.sql
+    dest: /opt/
+
+    
+*************************************************Mysql Install On Node**********************************************************************
+
+---
+- name: MySQL | install mysql packages
+  apt: pkg={{ item }} state=installed
+  become: true
+  with_items:
+   - mysql-client
+   - mysql-common
+   - mysql-server
+   - python-mysqldb
+
+- name: Create Application DB User
+  mysql_user: name=lead password=lead priv=*.*:ALL host='%' state=present
+
+- name: Create Application Database
+  mysql_db: name=leadapp state=present
+
+
+- name: make sure DB schemas is present
+  mysql_db: login_user=lead login_password=lead name=leadapp state=present
+
+- name: import DB
+  mysql_db: login_user=lead login_password=lead name=leadapp state=import target=/opt/schema.sql
+
+- name: copy mysqlconffile
+  template: src=mysqld.cnf.j2 dest=/etc/mysql/mysql.conf.d/mysqld.cnf
+
+- name:stop mysql
+  raw: service mysql stop
+
+- name: start mysql
+  raw: service mysql start
+  
+
+***********************************Hibernet file copy**********************************************
+- name: copy hibernetfile
+  template: src=hibernate.cfg.xml.j2 dest=/opt/apache-tomcat-7.0.86/webapps/leadapp/WEB-INF/classes/hibernate.cfg.xml
+
+- name: stop tomcat
+  raw: nohup /opt/apache-tomcat-7.0.86/bin/shutdown.sh
+
+- name: start tomcat
+  raw: nohup /opt/apache-tomcat-7.0.86/bin/startup.sh
+
+  
+***********************************Main playbook all roles include***********************************************
+
+---
+- hosts: all
+  user: vagrant
+  sudo: yes
+  roles:
+     - role: java
+     - role: tomcat
+     - role: leadapp
+     - role: schema
+     - role: mysql
+     - role: hibernet	 
