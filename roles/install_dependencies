@@ -41,7 +41,7 @@ tar xzf $TOMCAT7_CORE_TAR_FILENAME
 cp -r /tmp/$TOMCAT7_CORE_UNPACKED_DIRNAME/* $CATALINA_HOME
 
 # Install Java if not yet installed
-{ which java; } || { add-apt-repository ppa:webupd8team/java; } || { apt-get update; } || { apt-get install oracle-java8-installer; }
+#{ which java; } || { add-apt-repository ppa:webupd8team/java; } || { apt-get update; } || { apt-get install oracle-java8-installer; }
 
 # Create the service init.d script
 cat > /etc/init.d/tomcat7 <<'EOF'
