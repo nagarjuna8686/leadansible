@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+CATALINA_HOME='/home/ubuntu/tomcat7-codedeploy'
+
+TEMP_STAGING_DIR='/tmp/codedeploy-deployment-staging-area'
+WAR_STAGED_LOCATION="$TEMP_STAGING_DIR/leadapp.war"
+
+# Remove unpacked application artifacts
+if [[ -f $CATALINA_HOME/webapps/leadapp.war ]]; then
+    rm $CATALINA_HOME/webapps/leadapp.war
+fi
+if [[ -d $CATALINA_HOME/webapps/leadapp ]]; then
+    rm -rfv $CATALINA_HOME/webapps/leadapp
+fi
+
+
+# Copy the WAR file to the webapps directory
+cp $WAR_STAGED_LOCATION $CATALINA_HOME/webapps/
+
+# Start the Tomcat server 
+service tomcat7 start
