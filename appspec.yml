@@ -2,13 +2,13 @@ version: 0.0
 os: linux
 files:
   - source: /dest/lib/leadapp.war
-    destination: /home/ubuntu/apache-tomcat-7.0.96/webapps
-#hooks:
- # ApplicationStop:
-  #  - location: roles/stop_application1
-   #   timeout: 300
-     # runas: ubuntu
-  #ApplicationStart:
-   # - location: scripts/start_application2
-    #  timeout: 300
-     # runas: ubuntu
+    destination: /home/ubuntu/tomcat7/webapps
+hooks:
+  ApplicationStop:
+    - location: roles/stop.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: roles/start.sh
+      timeout: 300
+      runas: root
