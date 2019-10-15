@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /leadapp.war
+  - source: /dist/lib/leadapp.war
     destination: /home/ubuntu/tomcat7/webapps
 hooks:
   BeforeInstall:
