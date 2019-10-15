@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: dest/lib/leadapp.war
+  - source: /leadapp.war
     destination: /home/ubuntu/tomcat7/webapps
 hooks:
   ApplicationStop:
