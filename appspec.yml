@@ -1,11 +1,11 @@
 version: 0.0
 os: linux
 files:
-  - source: /dist/lib/leadapp.war
+  - source: dist/lib/leadapp.war
     destination: /home/ubuntu/tomcat7/webapps
 hooks:
   BeforeInstall:
-    - location: roles/install
+    - location: roles/install.sh
       timeout: 300
       runas: root
   ApplicationStop:
