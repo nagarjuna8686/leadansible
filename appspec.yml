@@ -5,9 +5,9 @@ files:
     destination: /home/ubuntu/tomcat7/webapps
 hooks:
   BeforeInstall:
-      - location: roles/install
-        timeout: 300
-        runas: root
+    - location: roles/install
+      timeout: 300
+      runas: root
   ApplicationStop:
     - location: roles/stop.sh
       timeout: 300
