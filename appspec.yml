@@ -3,6 +3,9 @@ os: linux
 files:
   - source: dist/lib/leadapp.war
     destination: /home/ubuntu/tomcat7/webapps
+  
+  - source: src/database/schema.sql
+    destination: /home/ubuntu/
 hooks:
   BeforeInstall:
     - location: roles/install.sh
